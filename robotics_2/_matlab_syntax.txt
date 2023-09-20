@@ -1,0 +1,136 @@
+% ----------------------------------------------------------------------------------------------------------- general utility
+syms A B C
+subs(exp,old,new)
+transpose() or '                -> example: a'
+inv() 		          	-> inverse
+pinv()				-> pseudoinverse for not squared or full rank matrix  
+sqrt() 			        -> square root (you can use ^(1/n)) 
+norm()            		-> euclidean normalization
+D = rad2deg(R)                  -> convert from radiant to degrees
+R = deg2rad(90)                 -> convert from degrees to radians
+                        
+vector = [1 2 3 4] 	       -> array or row vector
+dot(v1,v2)                     -> dot or inner product for vectors (= 0 if orthogonal relation)
+cross(e1,e2)                   -> cross product, e1 and e2 vectors or matrices of same shape
+
+matrix = [1 2 3; 4 5 6; 7 8 9]  -> matrix definition
+
+matrix*matrix                   -> normal multiplication btw matrices
+
+matrix.*matrix                  -> product on elements, example result[a11*a11,a12*a12,a13*a13; ...; ... a33*a33] 
+
+format short / format long -> bit used for numeric variables
+
+concat_h = [matrix, matrix]     -> horizontal concatenation, example: with matrix 3x3 result 3x6
+concat_v = [matrix; matrix]     -> vertical concatenation, example: with matrix 3x3 result 6x3
+
+
+syms x
+f = sin(5*x);
+diff(f)
+
+			# null space & range space
+null_space = null(J_pos);
+
+range = orth(J_q);
+	orth(J_q,'skipnormalization') <- USE THIS 
+	orth(J_q,'real','skipnormalization')
+
+
+rank = rank(matrix)
+licols(matrix)    -> licols is a script, which return rank(matrix) columns linearly independent
+
+inv(matrix)		   	-> inverse and pseudoinverse of a matrix
+pinv(matrix)
+
+
+diff(function)                   -> make the derivative
+diff(function,N)                 -> make the nth derivative
+diff(function,t)                 -> make the derivative respect to t
+diff(function,N,t) 		 -> make the nth derivative respect to t
+
+F = int(expr)			 -> integral
+F = int(expr,var)		
+F = int(expr,a,b)		 -> a -> min, b -> max of integration interval
+F = int(expr,var,a,b)
+
+
+val = limit(function,variable, tending value) -> limit of a function
+
+
+collect(expression)              -> collect variables to common factor (symbolically)
+(expand(expression)               -> estimate expression symbolically like the power
+
+
+diag(vector)                    -> return a diagonal matrix with the elements of the vector into the diagonal
+
+eye(size)                      	-> create a squared identity matrix of dim = (size,size)
+
+[U,S,V] = svd(A)                -> singular value decomposition
+
+e = eig(A)			-> return column vector with eigenvalues
+	or
+[V,D] = eig(A) 			->returns diagonal matrix D of eigenvalues and matrix V whose columns are the corresponding right eigenvectors, so that A*V = V*D.
+
+pretty(expression symbolic)      -> pretty print of the symbolic expression
+
+% ----------------------------------------------------------------------------------------------------------- used trigonometric functions
+
+atan2(y,x)                        -> first argument is the sin, the second the cos
+asin()
+acos()
+lambdaWrapped = wrapToPi(lambda)    Wrap angle in radians to [−pi pi]
+
+
+% ----------------------------------------------------------------------------------------------------------- define systems and solve
+syms a b c x   
+		# solve simbolically
+eqn = a*x^2 + b*x + c == 0
+S = solve(eqn)                  	-> solve for x
+Sa = solve(eqn,a)               	-> solve for a
+S = solve(eqn,x,'Real',true)    	-> only real results
+						example:
+						eq = round(sin(theta),5)==0;
+						sol = solve(eq, theta);
+
+		# expand expression simbolically
+		# example on the squaring and summing operation, the left terms is not expanded (eq = lhs(eq1)^2 + lhs(eq2)^2 == rhs(eq1)^2 + rhs(eq2)^2)
+exp_expanded = expand(exp_symb)
+
+		# solve numerically
+sol = vpasolve(function)
+		
+		# define and solve a system of equations
+syms u v                        
+eqns = [2*u + v == 0, u - v == 1];      
+S = solve(eqns,[u v])
+
+		#extract left part or right part of an equation
+left_side_eq = lhs(eqn)
+right_side_eq= rhs(eqn)
+
+		# solve using linsolve that takes A b from Ax = b
+[A b] = equationsToMatrix([eq1 eq2 ... eqn],[x1 x2... xn])
+x = linsolve(A,b)
+
+		# substitute values 
+new_eq = subs(eq,old,new)               			-> substitute value
+new_eq = subs(eq,[old_1, old_2],[new_1, new_2])                 -> substitute values
+
+
+
+
+
+
+eval(expression)                -> compute mathematical calculutions
+simplify(formula)               -> use mathematical equivalence to simplify the formula
+
+vpa() + round(val, decimal pos) -> to compute values as numbers in output, pass a long numeric solution to it 
+
+assume(condition)               -> assume condition on a variable 
+assume(variable,"clear")        -> remove condition on that variable
+
+------------------------------------------------------------------------------------------------------------------------------------ poles, natural freq and damping factor
+[wn,zeta, p] = damp(sys) returns the natural frequencies wn, and damping ratios zeta of the poles of sys. p poles of the system
+
+sys = tf([2,5,1],[1,0,2,-3]);			first array is the numerator and second the denominator.	
